@@ -1,4 +1,4 @@
-# Usage : 
+# Dependencies : 
 
 `python3 main.py`
 
