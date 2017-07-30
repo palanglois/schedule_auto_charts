@@ -1,0 +1,76 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>The HTML5 Herald</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+
+  <link rel="stylesheet" href="css/styles.css?v=1.0">
+
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+  <script type="text/javascript" src="/static/js/Chart.bundle.min.js"></script>
+  <script type="text/javascript" src="/static/js/utils.js"></script>
+</head>
+
+<body>
+  <div id="canvas-holder" style="width:40%"> 
+    <canvas id="chart-area" width="200" height="200"></canvas>
+  </div>
+  <script>
+    var randomScalingFactor = function() {
+        return Math.round(Math.random() * 100);
+    };
+
+    var config = {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [
+                    {%for scale_factor in scale_factors%}
+                    {{scale_factor}},
+                    {%endfor%}
+                ],
+                backgroundColor: [
+                    {%for color in colors%}
+                    '{{color}}',
+                    {%endfor%}
+                ],
+                label: 'Dataset 1'
+            }],
+            labels: [
+                {%for label in labels%}
+                "{{label}}",
+                {%endfor%}
+            ]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Chart.js Doughnut Chart'
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            }
+        }
+    };
+
+    window.onload = function() {
+        var ctx = document.getElementById("chart-area").getContext("2d");
+        window.myDoughnut = new Chart(ctx, config);
+    };
+
+  </script>
+</body>
+</html>
+
+
