@@ -5,6 +5,7 @@
 # Dependencies : 
 
 * PyQt 5
-* Flask
+* Jinja2
 * Chartjs (included)
+* PyOpenGL
 

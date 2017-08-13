@@ -26,7 +26,7 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
             s.wfile.write(bytes(content.render(**s.the_dict), "utf-8"))
         elif s.path[-2:] == 'js':
           try:
-            with open('static/js' + s.path, 'r') as aux_file:
+            with open(s.path[1:], 'r') as aux_file:
               s.wfile.write(bytes(aux_file.read(), "utf-8"))
           except OSError as e:
             print(e)

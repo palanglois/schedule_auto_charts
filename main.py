@@ -3,15 +3,17 @@
 
 import sys
 import datetime
-import webbrowser
 from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QPushButton, QLabel, QInputDialog
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QTimer, Qt
+from PyQt5.QtCore import QTimer, Qt, QUrl
+from PyQt5.QtWebEngineWidgets import QWebEngineView
 from ComputeStats import *
 import http.server
 from multiprocessing import Process
 from custom_server import MyHandler
 from socketserver import ThreadingMixIn
+from OpenGL import GLU
+from OpenGL import GL
 
 
 class ThreadedHTTPServer(ThreadingMixIn, http.server.HTTPServer):
@@ -70,6 +72,9 @@ class MainWindow(QWidget):
 
         # Adding a timer for displaying the chronometer
         self.timer = QTimer()
+
+        # Adding a web viewer
+        self.web_viewer = QWebEngineView()
    
         # Connecting buttons to methods
         button_start.clicked.connect(self.start_chronometer)
@@ -83,7 +88,8 @@ class MainWindow(QWidget):
 
     def display_time(self):
         current_time = self.stats_computer.get_current_time()
-        self.label_chrono.setText(str(current_time))
+        self.label_chrono.setText(".".join(str(current_time).split(".")[:-1]))
+
     def start_chronometer(self):
         self.stats_computer.start_chronometer()
         self.timer.start(100)
@@ -91,7 +97,6 @@ class MainWindow(QWidget):
     def stop_and_display(self):
         time = self.stats_computer.get_current_time()
         self.timer.stop()
-        self.label_chrono.setText(str(time))
         categorie, ok = QInputDialog.getItem(self, 
           "Select a category", "List of loaded categories", 
           self.loaded_categories, 0, False)
@@ -120,7 +125,8 @@ class MainWindow(QWidget):
         self.webThread.start()
 
         url = "http://127.0.0.1:5000/"
-        webbrowser.open(url, new=2)
+        self.web_viewer.load(QUrl(url))
+        self.web_viewer.show()
         
 
 def main():
