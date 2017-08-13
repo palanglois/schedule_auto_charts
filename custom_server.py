@@ -22,7 +22,6 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
         if s.path == '/':
           with open('templates/charts.html', 'r') as input_template:
             content = Template(input_template.read())
-            print(s.the_dict)
             s.wfile.write(bytes(content.render(**s.the_dict), "utf-8"))
         elif s.path[-2:] == 'js':
           try:
