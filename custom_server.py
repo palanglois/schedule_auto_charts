@@ -3,17 +3,13 @@
 
 import time
 import http.server
-from flask import render_template, Flask
-
-
-HOST_NAME = 'localhost'
-PORT_NUMBER = 5000
+from jinja2 import Template
 
 
 class MyHandler(http.server.BaseHTTPRequestHandler):
-    def __init__(self):
-        super(MyHandler, self).__init__()
-        self.app = Flask(__name__)
+    def __init__(self, the_dict, *args):
+      self.the_dict = the_dict
+      super().__init__(*args)
     def do_HEAD(s):
         s.send_response(200)
         s.send_header("Content-type", "text/html")
@@ -23,14 +19,19 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
         s.send_response(200)
         s.send_header("Content-type", "text/html")
         s.end_headers()
-        # s.wfile.write(bytes("<html><head><title>Title goes here.</title></head>", "utf-8"))
-        # s.wfile.write(bytes("<body><p>This is a test.</p>", "utf-8"))
-        # If someone went to "http://something.somewhere.net/foo/bar/",
-        # then s.path equals "/foo/bar/".
-        # s.wfile.write(bytes("<p>You accessed path: %s</p>" % s.path, "utf-8"))
-        # s.wfile.write(bytes("</body></html>", "utf-8"))
-        with self.app.context():
-            s.wfile.write(bytes(render_template('templates/charts2.html', **{}), "utf-8"))
+        if s.path == '/':
+          with open('templates/charts.html', 'r') as input_template:
+            content = Template(input_template.read())
+            print(s.the_dict)
+            s.wfile.write(bytes(content.render(**s.the_dict), "utf-8"))
+        elif s.path[-2:] == 'js':
+          try:
+            with open('static/js' + s.path, 'r') as aux_file:
+              s.wfile.write(bytes(aux_file.read(), "utf-8"))
+          except OSError as e:
+            print(e)
+            return
+
 
 if __name__ == '__main__':
     server_class = http.server.HTTPServer
