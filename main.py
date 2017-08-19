@@ -6,10 +6,15 @@ import datetime
 from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QPushButton, QLabel, QInputDialog
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QTimer, Qt, QUrl
-from PyQt5.QtWebEngineWidgets import QWebEngineView
+import platform
+if platform.system() == "Windows":
+    from qtpy.QtWebEngineWidgets import QWebEngineView
+    from threading import Thread
+else:
+    from PyQt5.QtWebEngineWidgets import QWebEngineView
+    from multiprocessing import Process
 from ComputeStats import *
 import http.server
-from multiprocessing import Process
 from custom_server import MyHandler
 from socketserver import ThreadingMixIn
 from OpenGL import GLU
@@ -43,8 +48,10 @@ class MainWindow(QWidget):
        
     def closeEvent(self, event):
         if self.webThread != 0:
-            self.webThread.terminate()
+            self.httpd.shutdown()
             self.webThread.join()
+            if platform.system() != 'Windows':
+                self.webThread.terminate()
         event.accept()
         
     def initUI(self):
@@ -113,27 +120,34 @@ class MainWindow(QWidget):
     def display_charts(self):
         the_db = self.stats_computer.loaded_database
         if self.webThread != 0:
-            self.httpd.server_close()
-            self.webThread.terminate()
+            self.httpd.shutdown()
             self.webThread.join()
+            if platform.system() != 'Windows':
+                self.webThread.terminate()
         # Initiate the server
         def handler(*args):
           MyHandler(self.make_render_dict(the_db), *args)
         server_class = ThreadedHTTPServer
         self.httpd = server_class(('localhost', 5000), handler)
-        self.webThread = Process(target=self.httpd.serve_forever)
+        if platform.system() == "Windows":
+            self.webThread = Thread(target=self.httpd.serve_forever)
+        else:
+            self.webThread = Process(target=self.httpd.serve_forever)
+
+        # Start the server
         self.webThread.start()
 
-        url = "http://127.0.0.1:5000/"
+        # Display the charts on the web viewer
+        url = "http://localhost:5000/"
         self.web_viewer.load(QUrl(url))
         self.web_viewer.show()
         
 
 def main():
-  app = QApplication(sys.argv)
-  my_main_window = MainWindow()
-  sys.exit(app.exec_())
+    app = QApplication(sys.argv)
+    my_main_window = MainWindow()
+    sys.exit(app.exec_())
 
 if __name__ == '__main__':
-  main()
+    main()
 
