@@ -16,7 +16,8 @@ class ComputeStats:
           with open("database.db", "r") as input_database:
             data_database = csv.reader(input_database)
             for categorie in data_database:
-              self.loaded_database[categorie[0]] = float(categorie[1])
+              if len(categorie) == 2:
+                self.loaded_database[categorie[0]] = float(categorie[1])
 
         # Load the categories defined by the user
         with open("categories.config", "r") as input_categories:
