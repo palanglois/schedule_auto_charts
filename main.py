@@ -33,8 +33,7 @@ class MainWindow(QWidget):
 
         self.label_chrono = None 
         self.stats_computer = ComputeStats()
-        self.loaded_categories = list(self.stats_computer.loaded_database.keys())
-        self.the_db = self.stats_computer.loaded_database
+        self.loaded_categories = self.stats_computer.categories
         self.chartColors = {
           "red": u"rgb(255, 99, 132)",
           "orange": u"rgb(255, 159, 64)",
@@ -118,7 +117,7 @@ class MainWindow(QWidget):
         return {'scale_factors':scale_factors, 'colors':colors, 'labels':labels}
 
     def display_charts(self):
-        the_db = self.stats_computer.loaded_database
+        the_db = self.stats_computer.get_database_dict()
         if self.webThread != 0:
             self.httpd.shutdown()
             self.webThread.join()
