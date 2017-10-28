@@ -118,12 +118,23 @@ class MainWindow(QWidget):
             return
         self.stats_computer.update_database(category, subcategory, note, begin_time, end_time)
 
-    def make_render_dict(self, the_db):
-        total_time = sum(list(the_db.values()))
-        scale_factors = [int(100*x/total_time) if total_time != 0 else 0 for x in list(the_db.values())]
-        colors = list(self.chartColors.values())[:len(the_db)]
-        labels = list(the_db.keys())
+    def make_chart_dict(self, input_dict):
+        total_time = sum(list(input_dict.values()))
+        scale_factors = [int(100*x/total_time) if total_time != 0 else 0 for x in list(input_dict.values())]
+        colors = list(self.chartColors.values())[:len(input_dict)]
+        labels = list(input_dict.keys())
         return {'scale_factors': scale_factors, 'colors': colors, 'labels': labels}
+
+    def make_render_dict(self, the_db):
+        # total_time = sum(list(the_db.values()))
+        # scale_factors = [int(100*x/total_time) if total_time != 0 else 0 for x in list(the_db.values())]
+        # colors = list(self.chartColors.values())[:len(the_db)]
+        # labels = list(the_db.keys())
+        output_dict = {}
+        output_dict["global_doughnut"] = self.make_chart_dict(the_db["global_doughnut"])
+        for category in self.loaded_categories:
+            output_dict[category] = self.make_chart_dict(the_db[category])
+        return output_dict
 
     def display_charts(self):
         the_db = self.stats_computer.get_database_dict()
@@ -147,6 +158,7 @@ class MainWindow(QWidget):
         # Display the charts on the web viewer
         url = "http://localhost:5000/"
         self.web_viewer.load(QUrl(url))
+        self.web_viewer.setGeometry(300, 300, 600, 600)
         self.web_viewer.show()
         
 

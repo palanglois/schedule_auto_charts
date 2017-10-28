@@ -1,0 +1,37 @@
+{
+  "type": "doughnut",
+  "data": {
+    "datasets": [{
+      "data": [
+        {%for scale_factor in scale_factors%}
+          {{scale_factor}}{{ "," if not loop.last }}
+        {%endfor%}
+        ],
+      "backgroundColor": [
+        {%for color in colors%}
+          "{{color}}"{{ "," if not loop.last }}
+        {%endfor%}
+        ],
+      "label": "Dataset 1"
+    }],
+    "labels": [
+      {%for label in labels%}
+        "{{label}}"{{ "," if not loop.last }}
+      {%endfor%}
+      ]
+    },
+    "options": {
+      "responsive": true,
+      "legend": {
+        "position": "top"
+      },
+      "title": {
+        "display": true,
+        "text": "Time partition"
+      },
+      "animation": {
+      "animateScale": true,
+      "animateRotate": true
+      }
+  }
+}

@@ -15,61 +15,19 @@
   <![endif]-->
   <script type="text/javascript" src="/static/js/Chart.bundle.min.js"></script>
   <script type="text/javascript" src="/static/js/utils.js"></script>
+  <script type="text/javascript" src="/static/js/jquery.min.js"></script>
 </head>
 
 <body>
   <div id="canvas-holder" style="width:40%"> 
     <canvas id="chart-area" width="200" height="200"></canvas>
   </div>
-  <script>
-    var randomScalingFactor = function() {
-        return Math.round(Math.random() * 100);
-    };
+  <div id="canvas-holder-sub" style="width:40%">
+    <canvas id="chart-area-sub" width="200" height="200"></canvas>
+  </div>
+  <script id="main-area-script"></script>
+  <script type="text/javascript" src="/static/js/custom.functionalities.js"></script>
 
-    var config = {
-        type: 'doughnut',
-        data: {
-            datasets: [{
-                data: [
-                    {%for scale_factor in scale_factors%}
-                    {{scale_factor}},
-                    {%endfor%}
-                ],
-                backgroundColor: [
-                    {%for color in colors%}
-                    '{{color}}',
-                    {%endfor%}
-                ],
-                label: 'Dataset 1'
-            }],
-            labels: [
-                {%for label in labels%}
-                "{{label}}",
-                {%endfor%}
-            ]
-        },
-        options: {
-            responsive: true,
-            legend: {
-                position: 'top',
-            },
-            title: {
-                display: true,
-                text: 'Time partition'
-            },
-            animation: {
-                animateScale: true,
-                animateRotate: true
-            }
-        }
-    };
-
-    window.onload = function() {
-        var ctx = document.getElementById("chart-area").getContext("2d");
-        window.myDoughnut = new Chart(ctx, config);
-    };
-
-  </script>
 </body>
 </html>
 

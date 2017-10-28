@@ -126,7 +126,16 @@ class ComputeStats:
 
     def get_database_dict(self):
         output_dict = dict()
+        #Categories
         all_categories = self.session.query(Category).all()
+        category_dict = {}
         for categorie in all_categories:
-            output_dict[categorie.name] = categorie.total_time
+            category_dict[categorie.name] = categorie.total_time
+            cur_subcat = {}
+            subcategories = self.session.query(SubCategory).filter(SubCategory.parent == categorie).all()
+            for subcategory in subcategories:
+                cur_subcat[subcategory.name] = subcategory.total_time
+            output_dict[categorie.name] = cur_subcat
+        output_dict["global_doughnut"] = category_dict
+
         return output_dict
