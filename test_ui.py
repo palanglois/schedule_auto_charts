@@ -22,6 +22,7 @@ class TestServer(unittest.TestCase):
         Open and close the stats windows twice in order to check that the server restarts properly
         :return:
         """
+        #TODO manage the db so that MainWindow does not use the actual db
         is_program_ok = True
         msg = ""
         try:
