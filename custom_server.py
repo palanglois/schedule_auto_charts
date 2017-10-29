@@ -7,8 +7,8 @@ from jinja2 import Template
 
 
 class MyHandler(http.server.BaseHTTPRequestHandler):
-    def __init__(self, the_dict, *args):
-        self.the_dict = the_dict
+    def __init__(self, main_window, *args):
+        self.main_window = main_window
         super().__init__(*args)
 
     def do_HEAD(s):
@@ -24,7 +24,7 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
         if s.path == '/':
             with open('templates/charts.html', 'r') as input_template:
                 content = Template(input_template.read())
-                s.wfile.write(bytes(content.render(**s.the_dict["global_doughnut"]), "utf-8"))
+                s.wfile.write(bytes(content.render(**s.main_window.render_dict["global_doughnut"]), "utf-8"))
         elif s.path[-2:] == 'js':
             try:
                 with open(s.path[1:], 'r') as aux_file:
@@ -45,5 +45,5 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
             with open('templates/getDoughnutScript.html', 'r') as input_template:
                 input_string = input_template.read()
                 content = Template(input_string)
-                rendered_content = content.render(**s.the_dict[label_clicked])
+                rendered_content = content.render(**s.main_window.render_dict[label_clicked])
                 s.wfile.write(bytes(rendered_content, "utf-8"))

@@ -30,6 +30,7 @@ class MainWindow(QWidget):
         super().__init__()
         self.webThread = 0
         self.httpd = None
+        self.render_dict = {}
 
         self.label_chrono = None 
         self.stats_computer = ComputeStats()
@@ -138,14 +139,15 @@ class MainWindow(QWidget):
 
     def display_charts(self):
         the_db = self.stats_computer.get_database_dict()
+        self.render_dict = self.make_render_dict(the_db)
         if self.webThread != 0:
             self.httpd.shutdown()
             self.httpd.server_close()
             self.webThread.join()
 
         # Initiate the server
-        def handler(*args):
-            MyHandler(self.make_render_dict(the_db), *args)
+        def handler(socket, client_address, http_server):
+            MyHandler(self, socket, client_address, http_server)
 
         server_class = ThreadedHTTPServer
         self.httpd = server_class(('localhost', 5000), handler)
