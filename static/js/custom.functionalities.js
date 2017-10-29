@@ -64,11 +64,15 @@ $(document).ready(function() {
 
     $('#calendar').fullCalendar({
         // put your options and callbacks here
+        header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'month,agendaWeek,agendaDay,listWeek'
+			}
 
     })
     var moment = $('#calendar').fullCalendar('getDate');
 
-    //alert(moment.format("M") + " " + moment.format("Y"));
 
     var request = $.ajax({
       url: "getMonthEvents",
@@ -83,7 +87,6 @@ $(document).ready(function() {
       for(i = 0; i < events.length ; i++)
       {
         $('#calendar').fullCalendar('renderEvent', events[i]);
-        //alert(events[i]);
       }
     });
 
