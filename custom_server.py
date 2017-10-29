@@ -1,11 +1,9 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-import time
 import http.server
 import urllib
 from jinja2 import Template
-import json
 
 
 class MyHandler(http.server.BaseHTTPRequestHandler):

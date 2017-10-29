@@ -43,7 +43,6 @@ document.getElementById("chart-area").onclick = function(evt)
         request.done(function(msg) {
           var config = JSON.parse(msg);
           var ctx = document.getElementById("chart-area-sub").getContext("2d");
-          console.log($('#chart-area-sub'));
           if(window.myDoughnutSub != null)
           {
             window.myDoughnutSub.destroy();
