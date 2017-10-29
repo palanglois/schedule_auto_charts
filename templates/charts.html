@@ -8,7 +8,8 @@
   <meta name="description" content="The HTML5 Herald">
   <meta name="author" content="SitePoint">
 
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel='stylesheet' href='/static/css/fullcalendar.min.css' />
 
   <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
@@ -16,6 +17,8 @@
   <script type="text/javascript" src="/static/js/Chart.bundle.min.js"></script>
   <script type="text/javascript" src="/static/js/utils.js"></script>
   <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+  <script type="text/javascript" src='/static/js/moment.min.js'></script>
+  <script type="text/javascript" src='/static/js/calendar/fullcalendar.min.js'></script>
 </head>
 
 <body>
@@ -25,6 +28,7 @@
   <div id="canvas-holder-sub" style="width:40%">
     <canvas id="chart-area-sub" width="200" height="200"></canvas>
   </div>
+  <div id='calendar'></div>
   <script id="main-area-script"></script>
   <script type="text/javascript" src="/static/js/custom.functionalities.js"></script>
 

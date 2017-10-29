@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+import calendar
 import csv
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, ForeignKey, Integer, String
@@ -92,7 +93,7 @@ class ComputeStats:
                     self.session.commit()
 
     def init_orm(self):
-        engine = create_engine(self.db_path)
+        engine = create_engine(self.db_path, connect_args={'check_same_thread': False})
         Base.metadata.bind = engine
         db_session = sessionmaker(bind=engine)
         return db_session()
@@ -139,3 +140,26 @@ class ComputeStats:
         output_dict["global_doughnut"] = category_dict
 
         return output_dict
+
+    def get_events_from_mounth(self, year, month):
+
+        # Find mounth boundaries
+        _, nb_days_in_month = calendar.monthrange(year, month)
+        first_day = datetime.datetime(year, month, 1, 0, 0)
+        last_day = datetime.datetime(year, month, nb_days_in_month, 23, 59)
+        begin_seconds = (first_day-datetime.datetime(1970, 1, 1)).total_seconds()
+        end_seconds = (last_day-datetime.datetime(1970, 1, 1)).total_seconds()
+
+        # Find events in current month
+        events_from_mounth = self.session.query(Event).\
+            filter(Event.begin_date > begin_seconds, Event.end_date < end_seconds).all()
+
+        # Output it as json
+        json_output = []
+        for event in events_from_mounth:
+            title = event.note if len(event.note) != 0 else "test"
+            start = (datetime.datetime(1970, 1, 1, 0, 0, 0) + datetime.timedelta(0, event.begin_date)).isoformat()
+            end = (datetime.datetime(1970, 1, 1, 0, 0, 0) + datetime.timedelta(0, event.end_date)).isoformat()
+            cur_event = {"title": title, "start": start, "end": end}
+            json_output.append(cur_event)
+        return json.dumps(json_output)

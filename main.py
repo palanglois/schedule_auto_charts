@@ -149,7 +149,8 @@ class MainWindow(QWidget):
         def handler(socket, client_address, http_server):
             MyHandler(self, socket, client_address, http_server)
 
-        server_class = ThreadedHTTPServer
+        # server_class = ThreadedHTTPServer
+        server_class = http.server.HTTPServer
         self.httpd = server_class(('localhost', 5000), handler)
         self.webThread = Thread(target=self.httpd.serve_forever)
         self.webThread.daemon = True

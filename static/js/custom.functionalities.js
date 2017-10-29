@@ -1,5 +1,6 @@
 window.onload = function() {
 
+    // Load the category doughnut chart
     var request = $.ajax({
       url: "getDoughnutScript.html",
       contentType: "application/json; charset=utf-8",
@@ -19,6 +20,7 @@ window.onload = function() {
     });
 };
 
+// Load the subcategory doughnut chart on click on the category doughnut chart
 document.getElementById("chart-area").onclick = function(evt)
 {
     var activePoints = window.myDoughnut.getElementsAtEvent(evt);
@@ -56,3 +58,37 @@ document.getElementById("chart-area").onclick = function(evt)
     }
 }
 
+$(document).ready(function() {
+
+    // Initialize the calendar
+
+    $('#calendar').fullCalendar({
+        // put your options and callbacks here
+
+    })
+    var moment = $('#calendar').fullCalendar('getDate');
+
+    //alert(moment.format("M") + " " + moment.format("Y"));
+
+    var request = $.ajax({
+      url: "getMonthEvents",
+      contentType: "application/json; charset=utf-8",
+      type: "POST",
+      data: {year: moment.format("Y"), month: moment.format("M")},
+      dataType: "html"
+    });
+
+    request.done(function(msg) {
+      var events = JSON.parse(msg);
+      for(i = 0; i < events.length ; i++)
+      {
+        $('#calendar').fullCalendar('renderEvent', events[i]);
+        //alert(events[i]);
+      }
+    });
+
+    request.fail(function(jqXHR, textStatus) {
+      alert( "Request failed: " + textStatus );
+    });
+
+});
