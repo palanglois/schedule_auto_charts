@@ -69,7 +69,7 @@ $(document).ready(function() {
 				center: 'title',
 				right: 'month,agendaWeek,agendaDay,listWeek'
 			},
-		height: "auto"
+		aspectRatio: 0.8
 
     })
     var moment = $('#calendar').fullCalendar('getDate');
