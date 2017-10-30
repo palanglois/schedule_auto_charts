@@ -22,13 +22,17 @@
 </head>
 
 <body>
-  <div id="canvas-holder" style="width:40%"> 
-    <canvas id="chart-area" width="200" height="200"></canvas>
+  <div id="doughnut-calendar-holder" class="horizontal-flex">
+   <div id="doughnut-holder" class="vertical-flex">
+    <div id="canvas-holder" class="doughnut">
+      <canvas id="chart-area" width="200" height="200"></canvas>
+    </div>
+    <div id="canvas-holder-sub" class="doughnut">
+      <canvas id="chart-area-sub" width="200" height="200"></canvas>
+    </div>
+   </div>
+   <div id='calendar'></div>
   </div>
-  <div id="canvas-holder-sub" style="width:40%">
-    <canvas id="chart-area-sub" width="200" height="200"></canvas>
-  </div>
-  <div id='calendar'></div>
   <script id="main-area-script"></script>
   <script type="text/javascript" src="/static/js/custom.functionalities.js"></script>
 

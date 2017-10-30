@@ -161,7 +161,7 @@ class MainWindow(QWidget):
         # Display the charts on the web viewer
         url = "http://localhost:5000/"
         self.web_viewer.load(QUrl(url))
-        self.web_viewer.setGeometry(300, 300, 600, 600)
+        self.web_viewer.setGeometry(300, 300, 800, 600)
         self.web_viewer.show()
         
 

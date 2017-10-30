@@ -27,13 +27,13 @@ document.getElementById("chart-area").onclick = function(evt)
     if(activePoints.length > 0)
     {
         //get the internal index of slice in pie chart
-        var clickedElementindex = activePoints[0]["_index"];
+        var clickedElementIndex = activePoints[0]["_index"];
 
         //get specific label by index
-        var label = window.myDoughnut.data.labels[clickedElementindex];
+        var label = window.myDoughnut.data.labels[clickedElementIndex];
 
         //get value by index
-        var value = window.myDoughnut.data.datasets[0].data[clickedElementindex];
+        var value = window.myDoughnut.data.datasets[0].data[clickedElementIndex];
 
         var request = $.ajax({
           url: "getDoughnutScript.html",
@@ -68,7 +68,8 @@ $(document).ready(function() {
 				left: 'prev,next today',
 				center: 'title',
 				right: 'month,agendaWeek,agendaDay,listWeek'
-			}
+			},
+		height: "auto"
 
     })
     var moment = $('#calendar').fullCalendar('getDate');
