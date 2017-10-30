@@ -58,12 +58,67 @@ document.getElementById("chart-area").onclick = function(evt)
     }
 }
 
+
+function monthYearObject(month, year)
+{
+  this.month = month;
+  this.year = year;
+}
+
+function eventLoadingManager()
+{
+  this.loaded_months = [];
+  this.load_month = function(month, year)
+  {
+    // Check that the month has not been loaded yet
+    var isThere = false;
+    for(i = 0;i<this.loaded_months.length;i++)
+    {
+      var pair = this.loaded_months[i];
+      if(pair.month == month && pair.year == year)
+      {
+        isThere = true;
+        break;
+      }
+    }
+    if(!isThere)
+    {
+      // Effectively load the month
+      this.loaded_months.push(new monthYearObject(month, year));
+
+      var request = $.ajax({
+        url: "getMonthEvents",
+        contentType: "application/json; charset=utf-8",
+        type: "POST",
+        data: {year: year, month: month},
+        dataType: "html"
+      });
+
+      request.done(function(msg) {
+        var events = JSON.parse(msg);
+        for(i = 0; i < events.length ; i++)
+        {
+          $('#calendar').fullCalendar('renderEvent', events[i], stick=true);
+        }
+      });
+
+      request.fail(function(jqXHR, textStatus) {
+        alert( "Request failed: " + textStatus );
+      });
+
+    }
+  }
+}
+
+
 $(document).ready(function() {
 
     // Initialize the calendar
 
+    window.my_event_loading_manager = new eventLoadingManager();
+
     $('#calendar').fullCalendar({
-        // put your options and callbacks here
+        // Calendar definition
         header: {
 				left: 'prev,next today',
 				center: 'title',
@@ -72,27 +127,23 @@ $(document).ready(function() {
 		aspectRatio: 0.8
 
     })
+
+    // Load events for current date
     var moment = $('#calendar').fullCalendar('getDate');
-
-
-    var request = $.ajax({
-      url: "getMonthEvents",
-      contentType: "application/json; charset=utf-8",
-      type: "POST",
-      data: {year: moment.format("Y"), month: moment.format("M")},
-      dataType: "html"
-    });
-
-    request.done(function(msg) {
-      var events = JSON.parse(msg);
-      for(i = 0; i < events.length ; i++)
-      {
-        $('#calendar').fullCalendar('renderEvent', events[i]);
-      }
-    });
-
-    request.fail(function(jqXHR, textStatus) {
-      alert( "Request failed: " + textStatus );
-    });
+    window.my_event_loading_manager.load_month(moment.format("M"), moment.format("Y"));
 
 });
+
+// Load events when clicking on the next button
+$(document).on('click','.fc-next-button', function()
+{
+    var moment = $('#calendar').fullCalendar('getDate');
+    window.my_event_loading_manager.load_month(moment.format("M"), moment.format("Y"));
+})
+
+// Load events when clicking on the prev button
+$(document).on('click','.fc-prev-button', function()
+{
+    var moment = $('#calendar').fullCalendar('getDate');
+    window.my_event_loading_manager.load_month(moment.format("M"), moment.format("Y"));
+})
