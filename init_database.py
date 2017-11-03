@@ -33,7 +33,7 @@ def main():
             new_category = Category(name=cat, total_time='0')
             session.add(new_category)
             for subcat in subcats:
-                new_subcategory = SubCategory(name=subcat, total_time='5', parent=new_category)
+                new_subcategory = SubCategory(name=subcat, total_time='0', parent=new_category)
                 session.add(new_subcategory)
         session.commit()
 
